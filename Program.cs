@@ -10,10 +10,12 @@ namespace Time1Test
     // Time1 class definition
     public class Time1 : Object
     {
-        private int hour;    // 0 -23
-        private int minute;  // 0-59
-        private int second;  // 0-59
-
+        //private int hour;    // 0 -23
+        //private int minute;  // 0-59
+        //private int second;  // 0-59
+        // remove hours, minutes and seconds 
+        private int SecondsSinceMidnight;
+        Time1 time;
         // Time1 constructor initializes instance variables to 
         // zero to set default time to midnight
         public Time1()
@@ -21,15 +23,50 @@ namespace Time1Test
             SetTime(0, 0, 0);
         }
 
+
+
+        public int Hour
+        {
+            get
+            {
+                return (SecondsSinceMidnight / 3600);
+            }
+            set
+            {
+                SecondsSinceMidnight = ((value >= 0 && value < 24) ? value : 0);
+            }
+        }
+        public int Minute
+        {
+            get
+            {
+                return minute;
+            }
+            set
+            {
+                minute = ((value >= 0 && value < 60) ? value : 0);
+            }
+        }
+        public int Second
+        {
+            get
+            {
+                return second;
+            }
+            set
+            {
+                second = ((value >= 0 && value < 60) ? value : 0);
+            }
+        }
         // Set new time value in 24-hour format. Perform validity
         // checks on the data. Set invalid values to zero.
         public void SetTime(int hourValue, int minuteValue, int secondValue)
         {
-            hour = (hourValue >= 0 && hourValue < 24) ?
+            time.Hour = (hourValue >= 0 && hourValue < 24) ?
                hourValue : 0;
-            minute = (minuteValue >= 0 && minuteValue < 60) ?
+            time.Minute = (minuteValue >= 0 && minuteValue < 60) ?
                minuteValue : 0;
-            second = (secondValue >= 0 && secondValue < 60) ?
+            time.Second = (secondValue >= 0 && secondValue < 60) ?
                secondValue : 0;
 
         } // end method SetTime
@@ -37,20 +74,21 @@ namespace Time1Test
         // convert time to universal-time (24 hour) format string
         public string ToUniversalString()
         {
-            return String.Format("{0:D2}:{1:D2}:{2:D2}", hour, minute, second);
+            return String.Format("{0:D2}:{1:D2}:{2:D2}", time.Hour, time.Minute, time.Second);
         }
 
         // convert time to standard-time (12 hour) format string
         public string ToStandardString()
         {
             return String.Format("{0}:{1:D2}:{2:D2} {3}",
-               ((hour == 12 || hour == 0) ? 12 : hour % 12),
-               minute, second, (hour < 12 ? "AM" : "PM"));
+               ((time.Hour == 12 || time.Hour == 0) ? 12 : time.Hour % 12),
+               time.Minute, time.Second, (time.Hour < 12 ? "AM" : "PM"));
         }
-        public string ToNewString()
-        {
-            return String.Format("{0}", (hour * 3600) + (minute * 60) + second);
-        }
+        //public string ToNewString()
+        //{
+        //    return String.Format("{0}", (hour * 3600) + (minute * 60) + second);
+        //}
+        // main entry point for application
         static void Main(string[] args)
         {
             Time1 time = new Time1();  // calls Time1 constructor
@@ -60,9 +98,7 @@ namespace Time1Test
             output = "Initial universal time is: " +
                time.ToUniversalString() +
                "\nInitial standard time is: " +
-               time.ToStandardString() +
-               "\nNew Time is : " +
-               time.ToNewString();
+               time.ToStandardString();
 
             // attempt valid time settings
             time.SetTime(13, 27, 6);
@@ -71,9 +107,7 @@ namespace Time1Test
             output += "\n\nUniversal time after SetTime is: " +
                time.ToUniversalString() +
                "\nStandard time after SetTime is: " +
-               time.ToStandardString() +
-               "\nNew Time after SetTime is: " +
-               time.ToNewString();
+               time.ToStandardString();
 
             // attempt invalid time settings
             time.SetTime(99, 99, 99);
@@ -85,6 +119,7 @@ namespace Time1Test
             MessageBox.Show(output, "Testing Class Time1");
 
         } // end method Main
+
     } // end class Time1
 }
 
