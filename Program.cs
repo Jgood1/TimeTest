@@ -5,95 +5,91 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Time1Test
+namespace Jgood1TimeTest
 {
     // Time1 class definition
     public class Time1 : Object
     {
-        //private int hour;    // 0 -23
-        //private int minute;  // 0-59
-        //private int second;  // 0-59
+        //Time1 time;                               //private int hour;    // 0 -23
+                                                    //private int minute;  // 0-59
+                                                    //private int second;  // 0-59
         // remove hours, minutes and seconds 
         private int SecondsSinceMidnight;
-        Time1 time;
+        
         // Time1 constructor initializes instance variables to 
         // zero to set default time to midnight
         public Time1()
         {
             SetTime(0, 0, 0);
         }
-
-
+        // main entry point for application
 
         public int Hour
         {
+           
             get
             {
-                return (SecondsSinceMidnight / 3600);
+                return SecondsSinceMidnight / 3600;
             }
             set
             {
-                SecondsSinceMidnight = ((value >= 0 && value < 24) ? value : 0);
+                SecondsSinceMidnight += 3600 * value; // ((value >= 0 && value < 24) ? value : 0);
             }
         }
         public int Minute
         {
             get
             {
-                return minute;
+                return (SecondsSinceMidnight % 3600) /60;
             }
             set
             {
-                minute = ((value >= 0 && value < 60) ? value : 0);
+                SecondsSinceMidnight += (value * 60); //((value >= 0 && value < 60) ? value : 0);
             }
         }
         public int Second
         {
             get
             {
-                return second;
+                return (SecondsSinceMidnight % 3600) %60;
             }
             set
             {
-                second = ((value >= 0 && value < 60) ? value : 0);
+                SecondsSinceMidnight += value; //((value >= 0 && value < 60) ? value : 0);
             }
         }
-        // Set new time value in 24-hour format. Perform validity
-        // checks on the data. Set invalid values to zero.
+      
         public void SetTime(int hourValue, int minuteValue, int secondValue)
         {
-            time.Hour = (hourValue >= 0 && hourValue < 24) ?
-               hourValue : 0;
-            time.Minute = (minuteValue >= 0 && minuteValue < 60) ?
-               minuteValue : 0;
-            time.Second = (secondValue >= 0 && secondValue < 60) ?
+            SecondsSinceMidnight = 0;
+            this.Hour = (hourValue >= 0 && hourValue < 24) ?
+              hourValue : 0;
+            this.Minute = (minuteValue >= 0 && minuteValue < 60) ?
+                  minuteValue : 0;
+            this.Second = (secondValue >= 0 && secondValue < 60) ?
                secondValue : 0;
-
+            
         } // end method SetTime
 
         // convert time to universal-time (24 hour) format string
         public string ToUniversalString()
         {
-            return String.Format("{0:D2}:{1:D2}:{2:D2}", time.Hour, time.Minute, time.Second);
+            return String.Format("{0:D2}:{1:D2}:{2:D2}", this.Hour,this.Minute, this.Second);
         }
 
         // convert time to standard-time (12 hour) format string
         public string ToStandardString()
         {
             return String.Format("{0}:{1:D2}:{2:D2} {3}",
-               ((time.Hour == 12 || time.Hour == 0) ? 12 : time.Hour % 12),
-               time.Minute, time.Second, (time.Hour < 12 ? "AM" : "PM"));
+               ((this.Hour == 12 || this.Hour == 0) ? 12 : this.Hour % 12),
+               this.Minute, this.Second, (this.Hour < 12 ? "AM" : "PM"));
         }
-        //public string ToNewString()
-        //{
-        //    return String.Format("{0}", (hour * 3600) + (minute * 60) + second);
-        //}
-        // main entry point for application
+   
         static void Main(string[] args)
         {
             Time1 time = new Time1();  // calls Time1 constructor
             string output;
-
+            time.SetTime(0, 0, 0);
             // assign string representation of time to output
             output = "Initial universal time is: " +
                time.ToUniversalString() +
@@ -101,7 +97,7 @@ namespace Time1Test
                time.ToStandardString();
 
             // attempt valid time settings
-            time.SetTime(13, 27, 6);
+            time.SetTime(12, 14, 53);
 
             // append new string representations of time to output
             output += "\n\nUniversal time after SetTime is: " +
@@ -110,7 +106,7 @@ namespace Time1Test
                time.ToStandardString();
 
             // attempt invalid time settings
-            time.SetTime(99, 99, 99);
+            time.SetTime(10, 0, 0);
 
             output += "\n\nAfter attempting invalid settings: " +
                "\nUniversal time: " + time.ToUniversalString() +
@@ -122,4 +118,3 @@ namespace Time1Test
 
     } // end class Time1
 }
-
