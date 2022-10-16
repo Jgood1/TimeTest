@@ -15,6 +15,84 @@ namespace Time1Test
         //private int second;  // 0-59
         // remove hours, minutes and seconds 
         private int SecondsSinceMidnight;
+        // throws exception and does not catch it locally
+        public static void ThrowExceptionWithoutCatch()
+        {
+            // throw exception, but do not catch it
+            try
+            {
+                Console.WriteLine("In ThrowExceptionWithoutCatch");
+
+                throw new Exception("Exception in ThrowExceptionWithoutCatch");
+            }
+
+            // finally executes because corresponding try executed
+            finally
+            {
+                Console.WriteLine("Finally executed in " + "ThrowExceptionWithoutCatch");
+            }
+
+            // unreachable code; would generate logic error 
+            Console.WriteLine("This will never be printed");
+
+        } // end method ThrowExceptionWithoutCatch
+
+        // throws exception, catches it and rethrows it
+        
+        public static void ThrowExceptionWithCatch()
+        {
+            // try block throws exception
+            try
+            {
+                Console.WriteLine("In ThrowExceptionWithCatch");
+
+                throw new Exception ("Invalid Time Error");
+                
+            }
+
+            // catch exception thrown in try block
+            catch (Exception error)
+            {
+                MessageBox.Show("Message: " + error.Message);
+            }
+           
+            // finally executes because corresponding try executed
+            finally
+            {
+                Console.WriteLine("Finally executed in ThrowExceptionWithCatch");
+            }
+
+            Console.WriteLine("End of ThrowExceptionWithCatch");
+
+        } // end method ThrowExceptionWithCatch
+        public static void DoesNotThrowException()
+        {
+            // try block does not throw any exceptions 
+            try
+            {
+                Console.WriteLine("In DoesNotThrowException");
+            }
+
+            // this catch never executes -  - real applications would not catch in same function as exception was thrown
+            catch
+            {
+                Console.WriteLine("This catch never executes");
+            }
+
+            // finally executes because corresponding try executed
+            finally
+            {
+                Console.WriteLine("Finally executed in DoesNotThrowException");
+            }
+
+            Console.WriteLine("End of DoesNotThrowException");
+
+        } // end method DoesNotThrowException
+
+
+
+
+
 
         // Time1 constructor initializes instance variables to 
         // zero to set default time to midnight
@@ -33,8 +111,19 @@ namespace Time1Test
             }
             set
             {
-                SecondsSinceMidnight = (this.Minute * 60)+ this.Second;//being set to what time is without hour current hour in seconds
-                SecondsSinceMidnight += 3600 * value; // adding new hour in seconds
+                if (value >= 0 && value < 24)
+                {
+
+                    SecondsSinceMidnight = (this.Minute * 60) + this.Second;//being set to what time is without hour current hour in seconds
+                    SecondsSinceMidnight += 3600 * value; // adding new hour in seconds
+                   
+                    //DoesNotThrowException();
+
+                }
+                else
+                {
+                    ThrowExceptionWithCatch();
+                }
                 // ((value >= 0 && value < 24) ? value : 0);
             }
         }
@@ -46,10 +135,19 @@ namespace Time1Test
             }
             set
             {
-                //SecondsSinceMidnight = (SecondsSinceMidnight % 3600); // subtracting current Minutes in seconds
-                SecondsSinceMidnight = (this.Hour * 3600) + (this.Second);               
-                SecondsSinceMidnight += (value * 60); 
-                //((value >= 0 && value < 60) ? value : 0);
+                if (value >= 0 && value <60)
+                {
+                    //SecondsSinceMidnight = (SecondsSinceMidnight % 3600); // subtracting current Minutes in seconds
+                    SecondsSinceMidnight = (this.Hour * 3600) + (this.Second);
+                    SecondsSinceMidnight += (value * 60);
+                    
+                    //DoesNotThrowException();
+
+                }//((value >= 0 && value < 60) ? value : 0);
+                else
+                {
+                    ThrowExceptionWithCatch();
+                }
             }
         }
         public int Second
@@ -60,21 +158,51 @@ namespace Time1Test
             }
             set
             {
-                SecondsSinceMidnight = (this.Minute*60) + (this.Hour * 3600);
-                SecondsSinceMidnight += value; //((value >= 0 && value < 60) ? value : 0);
+                if (value >= 0 && value < 60)
+                {
+                    SecondsSinceMidnight = (this.Minute * 60) + (this.Hour * 3600);
+                    SecondsSinceMidnight += value; //((value >= 0 && value < 60) ? value : 0);
+                    
+                    //DoesNotThrowException();
+                }
+                else
+                {
+                    ThrowExceptionWithCatch();
+                }
             }
         }
 
         public void SetTime(int hourValue, int minuteValue, int secondValue)
         {
             SecondsSinceMidnight = 0;
-            this.Hour = (hourValue >= 0 && hourValue < 24) ?
-              hourValue : 0;
-            this.Minute = (minuteValue >= 0 && minuteValue < 60) ?
-                  minuteValue : 0;
-            this.Second = (secondValue >= 0 && secondValue < 60) ?
-               secondValue : 0;
-
+            //this.Hour = (hourValue >= 0 && hourValue < 24) ?hourValue : 0;
+            if (hourValue >= 0 && hourValue < 24)
+            {
+                this.Hour = hourValue;
+            }
+            else
+            {
+                ThrowExceptionWithCatch();
+            }
+            //this.Minute = (minuteValue >= 0 && minuteValue < 60) ? minuteValue : 0;
+            if (minuteValue >= 0 && minuteValue < 60)
+            {
+                this.Minute = minuteValue;
+            }
+            else
+            {
+                ThrowExceptionWithCatch();
+            }
+            //this.Second = (secondValue >= 0 && secondValue < 60) ? secondValue : 0;
+            if (secondValue >= 0 && secondValue < 60)
+            {
+                this.Second = secondValue;
+            }
+            else 
+            {
+                ThrowExceptionWithCatch();
+            }
+            
         } // end method SetTime
 
         // convert time to universal-time (24 hour) format string
